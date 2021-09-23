@@ -138,3 +138,11 @@ def nav_mark(nvim: Nvim, stack: Stack) -> None:
     else:
         msg = LANG("no more marks")
         write(nvim, msg)
+
+
+@rpc(blocking=True)
+def marks_available(nvim: Nvim, stack: Stack) -> bool:
+    ns = create_ns(nvim, ns=NS)
+    win = cur_win(nvim)
+    buf = win_get_buf(nvim, win=win)
+    return bool(nvim.api.buf_get_extmarks(buf, ns, 0, -1, {"limit": 1}))
